@@ -1,0 +1,60 @@
+name: Deploy Project
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+env:
+  GH_HEAD_REF: ${{ github.head_ref }}
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  deploy:
+    name: Deploy Project
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.13
+
+    - name: Install dependencies and configure Outerbounds
+      run: |
+        python3 -m pip install -U -i https://test.pypi.org/simple/ ob-project-utils
+        python3 -m pip install outerbounds pyyaml
+        DEFAULT_INTEGRATION="$(yq .project obproject.toml)_cicd"
+        PLATFORM=$(yq .platform obproject.toml)
+        INTEGRATION=$(yq ".cicd_integration // \"$DEFAULT_INTEGRATION\"")
+        PERIMETER="default"
+        echo "🏗️ Deployment target:"
+        echo "  Platform: $PLATFORM"
+        echo "  Integration: $INTEGRATION"
+        echo "  Perimeter: $PERIMETER"
+        outerbounds service-principal-configure \
+          --name $INTEGRATION \
+          --deployment-domain $PLATFORM \
+          --perimeter $PERIMETER \
+          --github-actions
+
+    - name: Deploy
+      env:
+        COMMIT_URL: "https://github.com/${{ github.repository }}/commit/"
+        CI_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+        PYTHONUNBUFFERED: 1
+      run: obproject-deploy
+
