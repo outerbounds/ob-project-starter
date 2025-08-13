@@ -31,18 +31,20 @@ jobs:
       with:
         python-version: 3.13
 
-    - name: Install dependencies and configure Outerbounds
+    - name: Install dependencies
       run: |
         python3 -m pip install -U -i https://test.pypi.org/simple/ ob-project-utils
         python3 -m pip install -U requests
         python3 -m pip install outerbounds pyyaml
-        DEFAULT_INTEGRATION="$(yq .project obproject.toml)_cicd"
+    - name: Configure Outerbounds
+      run: |
+        DEFAULT_CICD_USER="$(yq .project obproject.toml)_cicd"
         PLATFORM=$(yq .platform obproject.toml)
-        INTEGRATION=$(yq ".cicd_integration // \"$DEFAULT_INTEGRATION\"")
+        CICD_USER=$(yq ".cicd_user // \"$DEFAULT_CICD_USER\"")
         PERIMETER="default"
         echo "🏗️ Deployment target:"
         echo "  Platform: $PLATFORM"
-        echo "  Integration: $INTEGRATION"
+        echo "  CI/CD User: $CICD_USER"
         echo "  Perimeter: $PERIMETER"
         outerbounds service-principal-configure \
           --name $INTEGRATION \
@@ -50,7 +52,7 @@ jobs:
           --perimeter $PERIMETER \
           --github-actions
 
-    - name: Deploy
+    - name: Deploy Project
       env:
         COMMIT_URL: "https://github.com/${{ github.repository }}/commit/"
         CI_URL: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

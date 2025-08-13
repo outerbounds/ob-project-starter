@@ -1,6 +1,6 @@
 
 platform = 'dev-silverwing.outerbounds.xyz'
-project = 'ob_project_starter'
+project = 'ob-project-starter'
 title = 'Outerbounds Project Starter Template'
 
 [dev-assets]
