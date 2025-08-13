@@ -1,9 +1,10 @@
 from metaflow import FlowSpec, Parameter, current, step
+from obproject import ProjectFlow
 
 from highlight_card import highlight
 
 
-class HighlightTester(FlowSpec):
+class HighlightTester(ProjectFlow):
     style = Parameter(
         "style",
         default="animals",
