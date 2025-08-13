@@ -9,6 +9,7 @@ on:
 
 env:
   GH_HEAD_REF: ${{ github.head_ref }}
+  GH_REF: ${{ github.ref_name }}
 
 permissions:
   id-token: write
@@ -46,6 +47,7 @@ jobs:
         echo "  Platform: $PLATFORM"
         echo "  CI/CD User: $CICD_USER"
         echo "  Perimeter: $PERIMETER"
+        echo "  Branch: $GH_HEAD_REF"
         outerbounds service-principal-configure \
           --name $CICD_USER \
           --deployment-domain $PLATFORM \
