@@ -38,7 +38,7 @@ jobs:
         python3 -m pip install outerbounds pyyaml
     - name: Configure Outerbounds
       run: |
-        DEFAULT_CICD_USER="$(yq .project obproject.toml)_cicd"
+        DEFAULT_CICD_USER="$(yq .project obproject.toml)-cicd"
         PLATFORM=$(yq .platform obproject.toml)
         CICD_USER=$(yq ".cicd_user // \"$DEFAULT_CICD_USER\"")
         PERIMETER="default"
