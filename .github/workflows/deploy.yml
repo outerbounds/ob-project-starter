@@ -47,7 +47,7 @@ jobs:
         echo "  CI/CD User: $CICD_USER"
         echo "  Perimeter: $PERIMETER"
         outerbounds service-principal-configure \
-          --name $INTEGRATION \
+          --name $CICD_USER \
           --deployment-domain $PLATFORM \
           --perimeter $PERIMETER \
           --github-actions
