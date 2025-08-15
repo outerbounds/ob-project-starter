@@ -76,7 +76,7 @@ class XKCDData(ProjectFlow):
     def end(self):
         xkcd_id = self.img_url.split('/')[-2]
         self.highlight.title = "XKCD Data Asset Updated"
-        self.highlight.add_line("Latest XKCD comic *{xkcd_id}*")
+        self.highlight.add_line(f"Latest XKCD comic *{xkcd_id}*")
         self.highlight.set_image(get_img(self.img_url))
 
 if __name__ == "__main__":
