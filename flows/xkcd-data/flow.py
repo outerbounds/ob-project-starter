@@ -16,6 +16,7 @@ from metaflow import (
 from metaflow.cards import Markdown, Image
 
 from obproject import ProjectFlow
+from highlight_card import highlight
 
 import requests
 
@@ -70,9 +71,13 @@ class XKCDData(ProjectFlow):
             print("New asset instance registered")
         self.next(self.end)
 
+    @highlight
     @step
     def end(self):
-        pass
+        xkcd_id = self.img_url.split('/')[-2]
+        self.highlight.title = "XKCD Data Asset Updated"
+        self.highlight.add_line("Latest XKCD comic *{xkcd_id}*")
+        self.highlight.set_image(get_img(self.img_url))
 
 if __name__ == "__main__":
     XKCDData()
