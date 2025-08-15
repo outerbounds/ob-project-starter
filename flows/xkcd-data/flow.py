@@ -64,7 +64,7 @@ class XKCDData(ProjectFlow):
                 "to avoid triggering flows downstream"
             )
         else:
-            current.card.append(Markdown(f"New XKCD at {latest_id}"))
+            current.card.append(Markdown(f"New XKCD at {self.latest_id}"))
             current.card.append(Image(get_img(self.img_url)))
             self.prj.asset.register_data_asset('xkcd', kind='artifact', blobs=['img_url'])
             print("New asset instance registered")
