@@ -45,7 +45,6 @@ class XKCDData(ProjectFlow):
 
     reset_existing = Parameter("reset-existing", default="no")
 
-    @retry
     @card(type="blank")
     @step
     def start(self):
