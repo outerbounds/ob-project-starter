@@ -14,8 +14,7 @@ from metaflow import (
 from metaflow.cards import Markdown as MD, Image
 from obproject import ProjectFlow
 from highlight_card import highlight
-
-import requests
+from xkcd_utils import get_img
 
 MODEL = "HuggingFaceTB/SmolVLM-Instruct"
 PROMPT = "Explain what is funny about this XKCD comic strip?"
@@ -67,17 +66,22 @@ def prompt(img_url):
     return generated_texts[0]
 
 
-def get_img(url):
-    return requests.get(url).content
-
-
 @trigger_on_finish(flow="XKCDData")
 class XKCDExplainer(ProjectFlow):
+
+    xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic")
 
     @card(type="blank")
     @step
     def start(self):
-        self.img_url = self.prj.get_data("xkcd")
+        if self.xkcd_url:
+            self.img_url = self.xkcd_url
+            print(f"Using an image passed in as a parameter, {self.img_url}")
+        else:
+            self.img_url = self.prj.get_data("xkcd")
+            print(f"Using an image from the latest data asset, {self.img_url}")
+
+        print(self.prj.asset.consume_model_asset("explainer-vlm"))
         self.next(self.prompt_vlm)
 
     # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
