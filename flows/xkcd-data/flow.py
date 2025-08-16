@@ -1,4 +1,3 @@
-
 import re
 from xml.etree import ElementTree
 
@@ -25,18 +24,21 @@ def fetch_latest():
     resp = requests.get(XKCD_RSS)
     resp.raise_for_status()
     root = ElementTree.fromstring(resp.text)
-    latest_item = root.find('./channel/item')
-    latest_id = latest_item.findtext('link')
-    description_html = latest_item.findtext('description')
+    latest_item = root.find("./channel/item")
+    latest_id = latest_item.findtext("link")
+    description_html = latest_item.findtext("description")
     img_url = re.search(r'src="([^"]+)"', description_html).group(1)
-    print(f'Latest XKCD {latest_id} - image at {img_url}')
+    print(f"Latest XKCD {latest_id} - image at {img_url}")
     return latest_id, img_url
+
 
 def get_img(url):
     return requests.get(url).content
 
+
 class SkipTrigger(Exception):
     pass
+
 
 @schedule(daily=True)
 class XKCDData(ProjectFlow):
@@ -64,7 +66,7 @@ class XKCDData(ProjectFlow):
         else:
             current.card.append(MD(f"New XKCD at {self.latest_id}"))
             current.card.append(Image(get_img(self.img_url)))
-            self.prj.register_data('xkcd', 'img_url')
+            self.prj.register_data("xkcd", "img_url")
             print("New asset instance registered")
         self.next(self.end)
 

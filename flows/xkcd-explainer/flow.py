@@ -1,4 +1,3 @@
-
 from metaflow import (
     card,
     FlowSpec,
@@ -21,7 +20,13 @@ import requests
 MODEL = "HuggingFaceTB/SmolVLM-Instruct"
 PROMPT = "Explain what is funny about this XKCD comic strip?"
 
+
 def prompt(img_url):
+    """
+    This prompting example is from
+    https://huggingface.co/HuggingFaceTB/SmolVLM-Instruct
+    """
+
     import torch
     from transformers import AutoProcessor, AutoModelForVision2Seq
     from transformers.image_utils import load_image
@@ -42,10 +47,7 @@ def prompt(img_url):
     messages = [
         {
             "role": "user",
-            "content": [
-                {"type": "image"},
-                {"type": "text", "text": PROMPT}
-            ]
+            "content": [{"type": "image"}, {"type": "text", "text": PROMPT}],
         },
     ]
 
@@ -64,29 +66,34 @@ def prompt(img_url):
 
     return generated_texts[0]
 
+
 def get_img(url):
     return requests.get(url).content
 
-@trigger_on_finish(flow='XKCDData')
+
+@trigger_on_finish(flow="XKCDData")
 class XKCDExplainer(ProjectFlow):
 
     @card(type="blank")
     @step
     def start(self):
-        self.img_url = self.prj.get_data('xkcd')
+        self.img_url = self.prj.get_data("xkcd")
         self.next(self.prompt_vlm)
-    
-    # add gpu=1 to @resources if you have GPU compute pools configured
+
+    # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
     @resources(cpu=4, memory=16000)
-    @card(type='blank', id='model', refresh_interval=2)
-    @pypi(python='3.11.11', packages={"transformers": "4.55.2", "torch": "2.8.0", "pillow": "11.3.0"})
+    @card(type="blank", id="model", refresh_interval=2)
+    @pypi(
+        python="3.11.11",
+        packages={"transformers": "4.55.2", "torch": "2.8.0", "pillow": "11.3.0"},
+    )
     @highlight
     @step
     def prompt_vlm(self):
         msg = f"Starting model `{MODEL}`.. This may take 3-5 minutes! ⌛"
-        title = MD(f'## {msg}')
-        current.card['model'].append(title)
-        current.card['model'].refresh()
+        title = MD(f"## {msg}")
+        current.card["model"].append(title)
+        current.card["model"].refresh()
 
         print(msg)
         explanation = prompt(self.img_url)
@@ -99,16 +106,18 @@ class XKCDExplainer(ProjectFlow):
         self.highlight.set_image(img)
 
         title.update("### ✅ Prompting done!")
-        current.card['model'].append(MD("## 🤖 `{MODEL}`'s interpretation of the comic"))
-        current.card['model'].append(Image(img))
-        current.card['model'].append(MD(explanation))
-
+        current.card["model"].append(
+            MD(f"## 🤖 `{MODEL}`'s interpretation of the comic")
+        )
+        current.card["model"].append(Image(img))
+        current.card["model"].append(MD(explanation))
 
         self.next(self.end)
 
     @step
     def end(self):
         pass
+
 
 if __name__ == "__main__":
     XKCDExplainer()
