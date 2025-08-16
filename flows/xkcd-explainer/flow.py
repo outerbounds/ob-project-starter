@@ -91,14 +91,15 @@ class XKCDExplainer(ProjectFlow):
         print(msg)
         explanation = prompt(self.img_url)
         print(explanation)
+        print("🔍 See a card attached for the explanation in context")
 
-        xkcd_id = self.img_url.split('/')[-2]
         img = get_img(self.img_url)
-        self.highlight.title = "Click to see an explanation of the joke"
-        self.highlight.add_line(f"Latest XKCD comic {xkcd_id}")
+        self.highlight.title = "Click to see an explanation of the comic"
+        self.highlight.add_line(f"The latest XKCD comic")
         self.highlight.set_image(img)
 
-        title.update("## ✅ Prompting done! Explanation")
+        title.update("### ✅ Prompting done!")
+        current.card['model'].append(MD("## 🤖 `{MODEL}`'s interpretation of the comic"))
         current.card['model'].append(Image(img))
         current.card['model'].append(MD(explanation))
 
