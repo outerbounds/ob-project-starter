@@ -13,6 +13,7 @@ from metaflow import (
     schedule,
     Parameter,
 )
+from metaflow.cards import Markdown as MD, Image
 from obproject import ProjectFlow
 
 import requests
@@ -61,7 +62,7 @@ class XKCDData(ProjectFlow):
                 "to avoid triggering flows downstream"
             )
         else:
-            current.card.append(Markdown(f"New XKCD at {self.latest_id}"))
+            current.card.append(MD(f"New XKCD at {self.latest_id}"))
             current.card.append(Image(get_img(self.img_url)))
             self.prj.register_data('xkcd', 'img_url')
             print("New asset instance registered")
