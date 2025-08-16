@@ -5,9 +5,8 @@ from metaflow import (
     current,
     resources,
     pypi,
-    secrets,
+    Parameter,
     trigger_on_finish,
-    huggingface_hub,
     profile,
     Flow,
 )
