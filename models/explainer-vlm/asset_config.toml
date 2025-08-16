@@ -1,5 +1,6 @@
 provider = "HuggingFaceTB/SmolVLM-Instruct"
-name = "XCKDExplainer VLM: `HuggingFaceTB/SmolVLM-Instruct`"
+name = "Explainer VLM: `HuggingFaceTB/SmolVLM-Instruct`"
 id = "explainer-vlm"
+kind = "vlm"
 blobs = ["HuggingFaceTB/SmolVLM-Instruct"]
 description = "This model is used to interpret the comic in the `XCKDExplainer` flow"
