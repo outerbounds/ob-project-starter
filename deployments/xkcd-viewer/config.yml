@@ -2,6 +2,8 @@ name: xkcd-viewer
 port: 8000
 description: View XKCD comics
 
+python: 3.13.5
+
 replicas:
   min: 1
   max: 1
