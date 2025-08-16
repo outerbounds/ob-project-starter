@@ -13,10 +13,7 @@ from metaflow import (
     schedule,
     Parameter,
 )
-from metaflow.cards import Markdown, Image
-
 from obproject import ProjectFlow
-from highlight_card import highlight
 
 import requests
 
@@ -40,7 +37,7 @@ def get_img(url):
 class SkipTrigger(Exception):
     pass
 
-@schedule(hourly=True)
+@schedule(daily=True)
 class XKCDData(ProjectFlow):
 
     reset_existing = Parameter("reset-existing", default="no")
@@ -66,17 +63,14 @@ class XKCDData(ProjectFlow):
         else:
             current.card.append(Markdown(f"New XKCD at {self.latest_id}"))
             current.card.append(Image(get_img(self.img_url)))
-            self.prj.asset.register_data_asset('xkcd', kind='artifact', blobs=['img_url'])
+            self.prj.register_data('xkcd', 'img_url')
             print("New asset instance registered")
         self.next(self.end)
 
-    @highlight
     @step
     def end(self):
-        xkcd_id = self.img_url.split('/')[-2]
-        self.highlight.title = "XKCD Data Asset Updated"
-        self.highlight.add_line(f"Latest XKCD comic *{xkcd_id}*")
-        self.highlight.set_image(get_img(self.img_url))
+        pass
+
 
 if __name__ == "__main__":
     XKCDData()
