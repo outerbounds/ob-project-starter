@@ -36,7 +36,7 @@ class XKCDData(ProjectFlow):
         else:
             current.card.append(MD(f"New XKCD at {self.latest_id}"))
             current.card.append(Image(get_img(self.img_url)))
-            self.prj.register_data("xkcd", "latest_id")
+            self.prj.register_data("xkcd", "img_url")
             print("📝 New asset instance registered")
             self.prj.safe_publish_event("explain")
             print("🔔 Triggering XKCDExplain")
