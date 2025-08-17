@@ -5,11 +5,37 @@ import streamlit as st
 
 from xkcd_utils import fetch_latest
 
+
+# TODO - replace below with
+# from outerbounds import ProjectEvent
+
 from metaflow.integrations import ArgoEvent
+
+
+def event_name(name, project, branch):
+    return f"prj.{project}.{branch}.{name}"
+
+
+class ProjectEvent:
+    def __init__(self, name, project, branch):
+        self.project = project
+        self.branch = branch
+        self.event = event_name(name, project, branch)
+
+    def publish(self, payload=None):
+        ArgoEvent(self.event).publish(payload=payload)
+
+    def safe_publish(self, payload=None):
+        ArgoEvent(self.event).safe_publish(payload=payload)
+
+
+# ^^^ remove this ^^^
+
 
 st.set_page_config(page_title="XKCD Viewer", page_icon="🖼️", layout="centered")
 
 # ---------- Helpers ----------
+
 
 @st.cache_data(show_spinner=False)
 def fetch_xkcd_info(comic_id: int):
@@ -22,11 +48,13 @@ def fetch_xkcd_info(comic_id: int):
     except requests.RequestException:
         return None
 
+
 @st.cache_data(show_spinner=False)
 def fetch_image_bytes(url: str) -> bytes:
     r = requests.get(url, timeout=15)
     r.raise_for_status()
     return r.content
+
 
 def load_valid_comic(comic_id: int):
     info = fetch_xkcd_info(comic_id)
@@ -40,6 +68,7 @@ def load_valid_comic(comic_id: int):
             if info:
                 return candidate, info
     return None, None
+
 
 # ---------- UI State ----------
 
@@ -81,13 +110,7 @@ else:
     st.warning("No image found for this comic.")
 
 if mid.button("Trigger analysis", type="primary", use_container_width=True):
-    project = os.environ['OB_PROJECT']
-    branch = os.environ['OB_BRANCH']
-    if branch in ('main', 'master'):
-        mf_branch = 'prod'
-    else:
-        mf_branch = f'test.{branch}'
-    event_name = f'metaflow.{project}.{mf_branch}.XKCDData.end'
-    ArgoEvent(event_name).publish({'xkcd_url': img_url})
+    ProjectEvent(os.environ["OB_PROJECT"], os.environ["OB_BRANCH"]).publish(
+        {"xkcd_url": img_url}
+    )
     st.success(f"XKCDExplainer triggered for {st.session_state.comic_id}")
-

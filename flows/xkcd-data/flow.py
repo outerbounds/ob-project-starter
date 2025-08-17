@@ -14,10 +14,6 @@ from obproject import ProjectFlow
 from xkcd_utils import fetch_latest, get_img
 
 
-class SkipTrigger(Exception):
-    pass
-
-
 @schedule(daily=True)
 class XKCDData(ProjectFlow):
 
@@ -37,15 +33,13 @@ class XKCDData(ProjectFlow):
         self.latest_id, self.img_url = fetch_latest()
         if self.latest_id == existing:
             print("No new XKCD available")
-            raise SkipTrigger(
-                "Not an error - failing this run on purpose "
-                "to avoid triggering flows downstream"
-            )
         else:
             current.card.append(MD(f"New XKCD at {self.latest_id}"))
             current.card.append(Image(get_img(self.img_url)))
-            self.prj.register_data("xkcd", "img_url")
-            print("New asset instance registered")
+            self.prj.register_data("xkcd", "latest_id")
+            print("📝 New asset instance registered")
+            self.prj.publish_event("explain")
+            print("🔔 Triggering XKCDExplain")
         self.next(self.end)
 
     @step

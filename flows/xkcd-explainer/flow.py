@@ -11,7 +11,7 @@ from metaflow import (
     Flow,
 )
 from metaflow.cards import Markdown as MD, Image
-from obproject import ProjectFlow
+from obproject import ProjectFlow, project_trigger
 from highlight_card import highlight
 from xkcd_utils import get_img
 
@@ -65,7 +65,7 @@ def prompt(img_url):
     return generated_texts[0]
 
 
-@trigger_on_finish(flow="XKCDData")
+@project_trigger(event="explain")
 class XKCDExplainer(ProjectFlow):
 
     xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic")
@@ -73,7 +73,7 @@ class XKCDExplainer(ProjectFlow):
     @card(type="blank")
     @step
     def start(self):
-        if self.xkcd_url:
+        if self.xkcd_url and self.xkcd_url != "null":
             self.img_url = self.xkcd_url
             print(f"Using an image passed in as a parameter, {self.img_url}")
         else:
