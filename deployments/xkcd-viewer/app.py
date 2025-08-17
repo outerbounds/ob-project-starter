@@ -110,7 +110,7 @@ else:
     st.warning("No image found for this comic.")
 
 if mid.button("Trigger analysis", type="primary", use_container_width=True):
-    ProjectEvent(os.environ["OB_PROJECT"], os.environ["OB_BRANCH"]).publish(
-        {"xkcd_url": img_url}
-    )
+    ProjectEvent(
+        "explain", project=os.environ["OB_PROJECT"], branch=os.environ["OB_BRANCH"]
+    ).publish({"xkcd_url": img_url})
     st.success(f"XKCDExplainer triggered for {st.session_state.comic_id}")
