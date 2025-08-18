@@ -22,5 +22,8 @@ In addition to the flows, the project includes [an interactive (Steamlit) dashbo
 open a new branch, alter any parts of the system, push a pull request, and see what happens!
 All changes take effect only in your personal branch, so you can experiment safely ⚗️
 
+In addition, you can play with `HighlightTester`, a flow demonstrating *highlight cards*, aka cards
+shown on the overview page, in action.
+
 #### ➡️ For comprehensive documentation, see [the project section in the Outerbounds docs](https://docs.outerbounds.com)
 
