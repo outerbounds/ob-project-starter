@@ -11,7 +11,7 @@ The project consists of two flows
      tracked as [**a data asset**, `xkcd`](data).
 
   2. `XKCDExplainer` - triggered by either `XKCDData` or the `XKCDViewer` app via an event.
-     It uses a local visual language model, tracked as [**a model asset**, `explainer-vlm`](model),
+     It uses a local visual language model, tracked as [**a model asset**, `explainer-vlm`](models),
      to explain a comic.
 
 In addition to the flows, the project includes [an interactive (Steamlit) dashboard](deployments)
