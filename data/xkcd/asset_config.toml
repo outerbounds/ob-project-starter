@@ -5,8 +5,6 @@ description = "Latest xkcd comic strip image"
 [properties]
 key = "value"
 test = "another"
-this = 123
-foo = false
 
 [tags]
 one = "tag1"
