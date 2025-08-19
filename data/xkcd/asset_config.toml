@@ -9,5 +9,5 @@ this = 123
 foo = false
 
 [tags]
-one = tag1
-another = tag2
+one = "tag1"
+another = "tag2"
