@@ -1,7 +1,5 @@
 from metaflow import FlowSpec, Parameter, current, step
-from obproject import ProjectFlow
-
-from highlight_card import highlight
+from obproject import ProjectFlow, highlight
 
 
 class HighlightTester(ProjectFlow):

@@ -1,7 +1,7 @@
 
 platform = 'dev-silverwing.outerbounds.xyz'
 project = 'ob_project_starter'
-title = 'Outerbounds Project Starter Template'
+title = 'XKCD Explainer'
 
 [dev-assets]
 branch = 'dev'

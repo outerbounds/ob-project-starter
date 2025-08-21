@@ -1,0 +1,11 @@
+name = "Latest XKCD comic"
+id = 'xkcd'
+description = "Latest xkcd comic strip image"
+
+[properties]
+key = "value"
+test = "another"
+
+[tags]
+one = "tag1"
+another = "tag2"

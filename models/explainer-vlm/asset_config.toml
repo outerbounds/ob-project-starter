@@ -1,0 +1,6 @@
+provider = "HuggingFaceTB/SmolVLM-Instruct"
+name = "Explainer VLM"
+id = "explainer-vlm"
+kind = "vlm"
+blobs = ["HuggingFaceTB/SmolVLM-Instruct"]
+description = "A visual language model used to interpret XKCD comics"
