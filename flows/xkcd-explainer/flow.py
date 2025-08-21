@@ -11,8 +11,7 @@ from metaflow import (
     Flow,
 )
 from metaflow.cards import Markdown as MD, Image
-from obproject import ProjectFlow, project_trigger
-from highlight_card import highlight
+from obproject import ProjectFlow, project_trigger, highlight
 from xkcd_utils import get_img
 
 MODEL = "HuggingFaceTB/SmolVLM-Instruct"
