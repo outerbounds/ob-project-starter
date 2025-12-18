@@ -7,4 +7,4 @@ replicas:
   max: 1
 
 commands:
-  - streamlit run app.py --server.port 8000
+  - streamlit run deployments/xkcd-viewer/app.py --server.port 8000
