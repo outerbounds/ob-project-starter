@@ -6,5 +6,9 @@ replicas:
   min: 1
   max: 1
 
+dependencies:
+  pypi:
+    streamlit: ""
+
 commands:
   - streamlit run deployments/xkcd-viewer/app.py --server.port 8000
