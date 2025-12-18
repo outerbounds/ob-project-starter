@@ -3,7 +3,7 @@ import io
 import requests
 import streamlit as st
 
-from xkcd_utils import fetch_latest
+from src.xkcd_utils import fetch_latest
 
 
 # TODO - replace below with
