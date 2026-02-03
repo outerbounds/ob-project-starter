@@ -22,6 +22,10 @@ class XKCDData(ProjectFlow):
     @card(type="blank")
     @step
     def start(self):
+
+
+        print("Starting data curation workflow for XKCD comic.")
+
         try:
             existing = Flow("XKCDData").latest_successful_run.data.latest_id
         except:
