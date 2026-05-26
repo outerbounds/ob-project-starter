@@ -67,7 +67,7 @@ def prompt(img_url):
 @project_trigger(event="explain")
 class XKCDExplainer(ProjectFlow):
 
-    xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic")
+    xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic", default="null")
 
     @card(type="blank")
     @step
@@ -76,10 +76,24 @@ class XKCDExplainer(ProjectFlow):
             self.img_url = self.xkcd_url
             print(f"Using an image passed in as a parameter, {self.img_url}")
         else:
-            self.img_url = self.prj.get_data("xkcd")
+            try:
+                self.img_url = self.prj.get_data("xkcd")
+            except Exception:
+                ref = self.prj._write_asset.peek_data_asset("xkcd")
+                from metaflow import get_namespace, namespace, Task
+                ns = get_namespace()
+                try:
+                    namespace(None)
+                    task = Task(ref["created_by"]["entity_id"])
+                    self.img_url = task[ref["data_properties"]["annotations"]["artifact"]].data
+                finally:
+                    namespace(ns)
             print(f"Using an image from the latest data asset, {self.img_url}")
 
-        print(self.prj.asset.consume_model_asset("explainer-vlm"))
+        try:
+            print(self.prj.asset.consume_model_asset("explainer-vlm"))
+        except Exception:
+            print(f"No 'explainer-vlm' model on read branch '{self.prj.read_branch}' yet.")
         self.next(self.prompt_vlm)
 
     # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
