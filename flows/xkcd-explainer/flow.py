@@ -67,7 +67,7 @@ def prompt(img_url):
 @project_trigger(event="explain")
 class XKCDExplainer(ProjectFlow):
 
-    xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic")
+    xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic", default="null")
 
     @card(type="blank")
     @step
