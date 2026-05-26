@@ -90,7 +90,10 @@ class XKCDExplainer(ProjectFlow):
                     namespace(ns)
             print(f"Using an image from the latest data asset, {self.img_url}")
 
-        print(self.prj.asset.consume_model_asset("explainer-vlm"))
+        try:
+            print(self.prj.asset.consume_model_asset("explainer-vlm"))
+        except Exception:
+            print(f"No 'explainer-vlm' model on read branch '{self.prj.read_branch}' yet.")
         self.next(self.prompt_vlm)
 
     # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
