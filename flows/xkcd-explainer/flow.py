@@ -72,7 +72,7 @@ class XKCDExplainer(ProjectFlow):
     @card(type="blank")
     @step
     def start(self):
-        if self.xkcd_url and self.xkcd_url != "null":
+        if self.xkcd_url and self.xkcd_url not in ("null", "None", ""):
             self.img_url = self.xkcd_url
             print(f"Using an image passed in as a parameter, {self.img_url}")
         else:
