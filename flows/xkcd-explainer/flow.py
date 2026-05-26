@@ -76,7 +76,18 @@ class XKCDExplainer(ProjectFlow):
             self.img_url = self.xkcd_url
             print(f"Using an image passed in as a parameter, {self.img_url}")
         else:
-            self.img_url = self.prj.get_data("xkcd")
+            try:
+                self.img_url = self.prj.get_data("xkcd")
+            except Exception:
+                ref = self.prj._write_asset.peek_data_asset("xkcd")
+                from metaflow import get_namespace, namespace, Task
+                ns = get_namespace()
+                try:
+                    namespace(None)
+                    task = Task(ref["created_by"]["entity_id"])
+                    self.img_url = task[ref["data_properties"]["annotations"]["artifact"]].data
+                finally:
+                    namespace(ns)
             print(f"Using an image from the latest data asset, {self.img_url}")
 
         print(self.prj.asset.consume_model_asset("explainer-vlm"))
