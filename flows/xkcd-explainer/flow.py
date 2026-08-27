@@ -1,11 +1,9 @@
 from metaflow import (
-    Flow,
-    FlowSpec,
     Parameter,
+    anaconda,
     card,
     current,
-    profile,
-    pypi,
+    profile,  # pyright: ignore
     resources,
     step,
     trigger_on_finish,
@@ -34,7 +32,7 @@ def prompt(img_url):
 
     image1 = load_image(img_url)
 
-    with profile(f"Loading model"):
+    with profile("Loading model"):
         processor = AutoProcessor.from_pretrained(MODEL)
         model = AutoModelForVision2Seq.from_pretrained(
             MODEL,
@@ -96,19 +94,19 @@ class XKCDExplainer(ProjectFlow):
 
         try:
             print(self.prj.asset.consume_model_asset("explainer-vlm"))
-        except Exception:
+        except Exception:  # noqa: BLE001
             print(
                 f"No 'explainer-vlm' model on read branch '{self.prj.read_branch}' yet."
             )
         self.next(self.prompt_vlm)
 
     # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
-    @resources(cpu=4, memory=16000)
-    @card(type="blank", id="model", refresh_interval=2)
-    @pypi(
-        python="3.11.11",
-        packages={"transformers": "4.55.2", "torch": "2.8.0", "pillow": "11.3.0"},
-    )
+    @resources(cpu=4, memory=16000, gpu=1)
+    @card(type="blank", id="model", refresh_interval=2)  # pyright: ignore
+    @anaconda(
+        python="3.11",
+        packages={"transformers": "4.57.1", "pytorch-gpu": "2.8.0", "pillow": "11.3.0"},
+    )  # pyright: ignore
     @highlight
     @step
     def prompt_vlm(self):
@@ -124,7 +122,7 @@ class XKCDExplainer(ProjectFlow):
 
         img = get_img(self.img_url)
         self.highlight.title = "Click to see an explanation of the comic"
-        self.highlight.add_line(f"The latest XKCD comic")
+        self.highlight.add_line(f"The latest XKCD comic")  # noqa: F541
         self.highlight.set_image(img)
 
         title.update("### ✅ Prompting done!")
