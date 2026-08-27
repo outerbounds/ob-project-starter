@@ -5,7 +5,6 @@ from metaflow import (
     card,
     current,
     project,
-    pypi,
     retry,
     schedule,
     step,
@@ -18,7 +17,6 @@ from xkcd_utils import fetch_latest, get_img
 
 
 @schedule(daily=True)
-@pypi(packages={"xkcd_utils": "*"})
 class XKCDData(ProjectFlow):
     reset_existing = Parameter("reset-existing", default="no")
 
