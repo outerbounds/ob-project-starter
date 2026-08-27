@@ -1,32 +1,30 @@
-import os
 import io
+import os
+
 import requests
 import streamlit as st
 
+# from metaflow.integrations import ArgoEvent
+from outerbounds import ProjectEvent
+
 from src.xkcd_utils import fetch_latest
-
-
-# TODO - replace below with
-# from outerbounds import ProjectEvent
-
-from metaflow.integrations import ArgoEvent
 
 
 def event_name(name, project, branch):
     return f"prj.{project}.{branch}.{name}"
 
 
-class ProjectEvent:
-    def __init__(self, name, project, branch):
-        self.project = project
-        self.branch = branch
-        self.event = event_name(name, project, branch)
-
-    def publish(self, payload=None):
-        ArgoEvent(self.event).publish(payload=payload)
-
-    def safe_publish(self, payload=None):
-        ArgoEvent(self.event).safe_publish(payload=payload)
+# class ProjectEvent:
+#     def __init__(self, name, project, branch):
+#         self.project = project
+#         self.branch = branch
+#         self.event = event_name(name, project, branch)
+#
+#     def publish(self, payload=None):
+#         ArgoEvent(self.event).publish(payload=payload)
+#
+#     def safe_publish(self, payload=None):
+#         ArgoEvent(self.event).safe_publish(payload=payload)
 
 
 # ^^^ remove this ^^^
