@@ -104,8 +104,8 @@ class XKCDExplainer(ProjectFlow):
     @resources(cpu=4, memory=16000, gpu=1)
     @card(type="blank", id="model", refresh_interval=2)  # pyright: ignore
     @anaconda(
-        python="3.11",
-        packages={"transformers": "4.57.1", "pytorch-gpu": "2.8.0", "pillow": "11.3.0"},
+        python="3.14",
+        packages={"transformers": "5.16.0", "pytorch": "2.12.0", "pillow": "12.3.0"},
     )  # pyright: ignore
     @highlight
     @step
