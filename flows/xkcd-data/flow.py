@@ -1,28 +1,30 @@
 from metaflow import (
-    card,
+    Flow,
     FlowSpec,
-    step,
+    Parameter,
+    card,
     current,
     project,
-    Flow,
+    pypi,
     retry,
     schedule,
-    Parameter,
+    step,
 )
-from metaflow.cards import Markdown as MD, Image
+from metaflow.cards import Image
+from metaflow.cards import Markdown as MD
 from obproject import ProjectFlow
+
 from xkcd_utils import fetch_latest, get_img
 
 
 @schedule(daily=True)
+@pypi(packages={"xkcd_utils": "*"})
 class XKCDData(ProjectFlow):
-
     reset_existing = Parameter("reset-existing", default="no")
 
     @card(type="blank")
     @step
     def start(self):
-
 
         print("Starting data curation workflow for XKCD comic.")
 

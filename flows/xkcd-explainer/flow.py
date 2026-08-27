@@ -1,17 +1,19 @@
 from metaflow import (
-    card,
-    FlowSpec,
-    step,
-    current,
-    resources,
-    pypi,
-    Parameter,
-    trigger_on_finish,
-    profile,
     Flow,
+    FlowSpec,
+    Parameter,
+    card,
+    current,
+    profile,
+    pypi,
+    resources,
+    step,
+    trigger_on_finish,
 )
-from metaflow.cards import Markdown as MD, Image
-from obproject import ProjectFlow, project_trigger, highlight
+from metaflow.cards import Image
+from metaflow.cards import Markdown as MD
+from obproject import ProjectFlow, highlight, project_trigger
+
 from xkcd_utils import get_img
 
 MODEL = "HuggingFaceTB/SmolVLM-Instruct"
@@ -25,7 +27,7 @@ def prompt(img_url):
     """
 
     import torch
-    from transformers import AutoProcessor, AutoModelForVision2Seq
+    from transformers import AutoModelForVision2Seq, AutoProcessor
     from transformers.image_utils import load_image
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -66,7 +68,6 @@ def prompt(img_url):
 
 @project_trigger(event="explain")
 class XKCDExplainer(ProjectFlow):
-
     xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic", default="null")
 
     @card(type="blank")
@@ -80,12 +81,15 @@ class XKCDExplainer(ProjectFlow):
                 self.img_url = self.prj.get_data("xkcd")
             except Exception:
                 ref = self.prj._write_asset.peek_data_asset("xkcd")
-                from metaflow import get_namespace, namespace, Task
+                from metaflow import Task, get_namespace, namespace
+
                 ns = get_namespace()
                 try:
                     namespace(None)
                     task = Task(ref["created_by"]["entity_id"])
-                    self.img_url = task[ref["data_properties"]["annotations"]["artifact"]].data
+                    self.img_url = task[
+                        ref["data_properties"]["annotations"]["artifact"]
+                    ].data
                 finally:
                     namespace(ns)
             print(f"Using an image from the latest data asset, {self.img_url}")
@@ -93,7 +97,9 @@ class XKCDExplainer(ProjectFlow):
         try:
             print(self.prj.asset.consume_model_asset("explainer-vlm"))
         except Exception:
-            print(f"No 'explainer-vlm' model on read branch '{self.prj.read_branch}' yet.")
+            print(
+                f"No 'explainer-vlm' model on read branch '{self.prj.read_branch}' yet."
+            )
         self.next(self.prompt_vlm)
 
     # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
