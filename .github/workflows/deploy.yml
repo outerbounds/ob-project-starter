@@ -62,4 +62,10 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
           PYTHONUNBUFFERED: 1
+          # One-time production-token handoff: this project/branch was previously deployed
+          # to Argo Workflows manually (by ahadjigeorgalis), so the CI/CD service principal
+          # needs to present the same token once to take over ownership of future deploys.
+          # Metaflow's Click CLI auto-derives this env var for `argo-workflows create --authorize`.
+          # Safe to leave in place after the first successful CI deploy of this branch.
+          METAFLOW_ARGO_WORKFLOWS_CREATE_AUTHORIZE: ${{ secrets.XKCD_DATA_PRODUCTION_TOKEN }}
         run: obproject-deploy
