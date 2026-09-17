@@ -7,7 +7,7 @@ replicas:
   max: 1
 
 dependencies:
-  pypi:
+  anaconda:
     streamlit: ""
     outerbounds: ""
     ob-project-utils: ""
