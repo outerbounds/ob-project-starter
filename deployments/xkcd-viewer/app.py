@@ -4,31 +4,9 @@ import os
 import requests
 import streamlit as st
 
-# from metaflow.integrations import ArgoEvent
-from outerbounds import ProjectEvent
+from obproject import ProjectEvent
 
 from src.xkcd_utils import fetch_latest
-
-
-def event_name(name, project, branch):
-    return f"prj.{project}.{branch}.{name}"
-
-
-# class ProjectEvent:
-#     def __init__(self, name, project, branch):
-#         self.project = project
-#         self.branch = branch
-#         self.event = event_name(name, project, branch)
-#
-#     def publish(self, payload=None):
-#         ArgoEvent(self.event).publish(payload=payload)
-#
-#     def safe_publish(self, payload=None):
-#         ArgoEvent(self.event).safe_publish(payload=payload)
-
-
-# ^^^ remove this ^^^
-
 
 st.set_page_config(page_title="XKCD Viewer", page_icon="🖼️", layout="centered")
 

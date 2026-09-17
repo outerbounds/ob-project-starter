@@ -10,6 +10,7 @@ dependencies:
   pypi:
     streamlit: ""
     outerbounds: ""
+    ob-project-utils: ""
 
 commands:
   - streamlit run deployments/xkcd-viewer/app.py --server.port 8000
