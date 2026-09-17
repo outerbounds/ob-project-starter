@@ -3,7 +3,6 @@ import os
 
 import requests
 import streamlit as st
-
 from obproject import ProjectEvent
 
 from src.xkcd_utils import fetch_latest
