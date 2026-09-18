@@ -105,7 +105,12 @@ class XKCDExplainer(ProjectFlow):
     @card(type="blank", id="model", refresh_interval=2)  # pyright: ignore
     @anaconda(
         python="3.14",
-        packages={"transformers": "5.16.0", "pytorch": "2.12.0", "pillow": "12.3.0"},
+        packages={
+            "transformers": "5.16.0",
+            "pytorch": "2.12.0",
+            "pillow": "12.3.0",
+            "torchvision": "0.29.0",
+        },
     )  # pyright: ignore
     @highlight
     @step
