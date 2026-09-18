@@ -25,7 +25,7 @@ def prompt(img_url):
     """
 
     import torch
-    from transformers import AutoModelForImageTextToText, AutoProcessor
+    from transformers import AutoModelForVision2Seq, AutoProcessor
     from transformers.image_utils import load_image
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -34,7 +34,7 @@ def prompt(img_url):
 
     with profile("Loading model"):
         processor = AutoProcessor.from_pretrained(MODEL)
-        model = AutoModelForImageTextToText.from_pretrained(
+        model = AutoModelForVision2Seq.from_pretrained(
             MODEL,
             torch_dtype=torch.bfloat16,
             _attn_implementation="flash_attention_2" if DEVICE == "cuda" else "eager",
