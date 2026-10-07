@@ -25,7 +25,7 @@ def prompt(img_url):
     """
 
     import torch
-    from transformers import AutoModelForVision2Seq, AutoProcessor
+    from transformers import AutoModelForImageTextToText, AutoProcessor
     from transformers.image_utils import load_image
 
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -34,10 +34,10 @@ def prompt(img_url):
 
     with profile("Loading model"):
         processor = AutoProcessor.from_pretrained(MODEL)
-        model = AutoModelForVision2Seq.from_pretrained(
+        model = AutoModelForImageTextToText.from_pretrained(
             MODEL,
-            torch_dtype=torch.bfloat16,
-            _attn_implementation="flash_attention_2" if DEVICE == "cuda" else "eager",
+            dtype=torch.bfloat16,
+            attn_implementation="flash_attention_2" if DEVICE == "cuda" else "eager",
         ).to(DEVICE)
 
     # Create input messages
@@ -68,7 +68,7 @@ def prompt(img_url):
 class XKCDExplainer(ProjectFlow):
     xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic", default="null")
 
-    @card(type="blank")
+    @card()
     @step
     def start(self):
         if self.xkcd_url and self.xkcd_url not in ("null", "None", ""):
@@ -106,10 +106,10 @@ class XKCDExplainer(ProjectFlow):
     @anaconda(
         python="3.14",
         packages={
-            "transformers": "5.16.0",
-            "pytorch": "2.12.0",
             "pillow": "12.3.0",
+            "pytorch": "2.14.0",
             "torchvision": "0.29.0",
+            "transformers": "5.17.0",
         },
     )  # pyright: ignore
     @highlight
