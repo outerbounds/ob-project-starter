@@ -1,11 +1,8 @@
 from metaflow import (
     Flow,
-    FlowSpec,
     Parameter,
     card,
     current,
-    project,
-    retry,
     schedule,
     step,
 )

@@ -3,6 +3,7 @@ from metaflow import (
     anaconda,
     card,
     current,
+    huggingface_hub,  # pyright: ignore
     profile,  # pyright: ignore
     resources,
     secrets,
@@ -18,7 +19,7 @@ MODEL = "HuggingFaceTB/SmolVLM-Instruct"
 PROMPT = "Explain what is funny about this XKCD comic strip?"
 
 
-def prompt(img_url):
+def prompt(img_url, model_path):
     """
     This prompting example is from
     https://huggingface.co/HuggingFaceTB/SmolVLM-Instruct
@@ -33,9 +34,9 @@ def prompt(img_url):
     image1 = load_image(img_url)
 
     with profile("Loading model"):
-        processor = AutoProcessor.from_pretrained(MODEL)
+        processor = AutoProcessor.from_pretrained(model_path)
         model = AutoModelForImageTextToText.from_pretrained(
-            MODEL,
+            model_path,
             dtype=torch.bfloat16,
             attn_implementation="flash_attention_2" if DEVICE == "cuda" else "eager",
         ).to(DEVICE)
@@ -129,8 +130,12 @@ class XKCDExplainer(ProjectFlow):
             "torchvision": "0.29.0",
             "transformers": "5.17.0",
             "huggingface_hub": "1.33.0",
+            # brotlicffi 1.2.0.1 has a streaming-decode regression that breaks
+            # huggingface_hub downloads via httpx; 1.2.0.2 (fix) is not on the channel yet.
+            "brotlicffi": "1.1.0.0",
         },
     )  # pyright: ignore
+    @huggingface_hub(cache_scope="global", load=[MODEL])  # pyright: ignore
     @highlight
     @step
     def prompt_vlm(self):
@@ -146,7 +151,8 @@ class XKCDExplainer(ProjectFlow):
         current.card["model"].refresh()
 
         print(msg)
-        explanation = prompt(self.img_url)
+        # Weights are cached in the Metaflow datastore by @huggingface_hub
+        explanation = prompt(self.img_url, current.huggingface_hub.loaded[MODEL])
         print(explanation)
         print("🔍 See a card attached for the explanation in context")
 

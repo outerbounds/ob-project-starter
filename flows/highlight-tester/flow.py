@@ -1,4 +1,4 @@
-from metaflow import FlowSpec, Parameter, current, step
+from metaflow import Parameter, step
 from obproject import ProjectFlow, highlight
 
 
