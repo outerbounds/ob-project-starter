@@ -5,8 +5,8 @@ from metaflow import (
     current,
     profile,  # pyright: ignore
     resources,
+    secrets,
     step,
-    trigger_on_finish,
 )
 from metaflow.cards import Image
 from metaflow.cards import Markdown as MD
@@ -64,6 +64,22 @@ def prompt(img_url):
     return generated_texts[0]
 
 
+def set_hf_token() -> str | None:
+    import os
+
+    from huggingface_hub import whoami
+
+    hf_token = os.getenv("HF_TOKEN")
+    try:
+        user_info = whoami(hf_token)
+        username = user_info["name"]
+    except Exception as e:
+        raise RuntimeError("Failed to authenticate.") from e
+
+    print(f"Successfully authenticated to HuggingFace as {username}.")
+    return hf_token
+
+
 @project_trigger(event="explain")
 class XKCDExplainer(ProjectFlow):
     xkcd_url = Parameter("xkcd_url", help="Image url of an XKCD comic", default="null")
@@ -102,6 +118,7 @@ class XKCDExplainer(ProjectFlow):
 
     # ⬇️ add gpu=1 to @resources if you have GPU compute pools configured
     @resources(cpu=4, memory=16000, gpu=1)
+    @secrets(sources=["outerbounds.anaconda-se-gtm01-read-only"])
     @card(type="blank", id="model", refresh_interval=2)  # pyright: ignore
     @anaconda(
         python="3.14",
@@ -115,6 +132,12 @@ class XKCDExplainer(ProjectFlow):
     @highlight
     @step
     def prompt_vlm(self):
+        import os
+
+        # provides faster downloads
+        hf_token = set_hf_token()
+        os.environ["HF_TOKEN"] = hf_token
+
         msg = f"Starting model `{MODEL}`.. This may take 3-5 minutes! ⌛"
         title = MD(f"## {msg}")
         current.card["model"].append(title)
