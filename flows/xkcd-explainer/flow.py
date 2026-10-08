@@ -123,6 +123,7 @@ class XKCDExplainer(ProjectFlow):
     @anaconda(
         python="3.14",
         packages={
+            "httpx": "0.28.1",
             "pillow": "12.3.0",
             "pytorch": "2.14.0",
             "torchvision": "0.29.0",
