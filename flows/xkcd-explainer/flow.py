@@ -64,7 +64,7 @@ def prompt(img_url):
     return generated_texts[0]
 
 
-def set_hf_token() -> str | None:
+def set_hf_token():
     import os
 
     from huggingface_hub import whoami
@@ -127,6 +127,7 @@ class XKCDExplainer(ProjectFlow):
             "pytorch": "2.14.0",
             "torchvision": "0.29.0",
             "transformers": "5.17.0",
+            "huggingface_hub": "1.33.0",
         },
     )  # pyright: ignore
     @highlight
